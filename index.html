@@ -76,11 +76,18 @@
       display:flex; align-items:center; justify-content:center;
     }
 
+    /* Timer */
+    .timer {
+      position:absolute; top:3px; left:50%; transform:translateX(-50%);
+      font-size:25px; color:#ff3333; font-weight:900;
+      text-shadow:0 0 0px #ff3333, 0 0 5px #ff4d4d;
+    }
+
     /* Blinking green neon (smaller and softer) */
     @keyframes blink {0%, 50%, 100% {opacity:1;} 25%, 75% {opacity:0;}}
     .blinking-green {
       position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
-      font-size:40px; font-weight:900; color:#00ff66;
+      font-size:32px; font-weight:900; color:#00ff66;
       text-shadow:0 0 5px #00ff66, 0 0 10px #00ff66;
       animation:blink 1s infinite; z-index:100; text-align:center;
     }
@@ -89,7 +96,7 @@
     .red-neon {
       position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
       font-size:64px; font-weight:900; color:#ff3333;
-      text-shadow:0 0 6px #ff3333, 0 0 14px #ff4d4d;
+      text-shadow:0 0 4px #ff3333, 0 0 5px #ff4d4d;
       z-index:100; text-align:center;
     }
 
@@ -100,6 +107,7 @@
 <body>
 
 <div class="terminal" id="terminal">
+  <div class="timer" id="timer">59</div>
   <h1 id="mainTitle">ENTER A CODE TO DEACTIVATE</h1>
   <div class="subtitle" id="subtitle">System Control — Access required to shut down perimeter grid</div>
 
@@ -131,6 +139,14 @@ const mainTitle = document.getElementById('mainTitle');
 const subtitle = document.getElementById('subtitle');
 const panel = document.getElementById('panel');
 const lock = document.getElementById('lock');
+const timerEl = document.getElementById('timer');
+
+let timeLeft = 59;
+const countdown = setInterval(() => {
+  timeLeft--;
+  if (timeLeft >= 0) timerEl.textContent = timeLeft;
+  if (timeLeft <= 0) clearInterval(countdown);
+}, 1000);
 
 function focusInput(){ hidden.focus(); }
 focusInput();
@@ -154,6 +170,8 @@ function submitCode(){
   if(v.length!==6){status.textContent='Code must be 6 digits.'; focusInput(); return;}
 
   if(v===targetCode){
+    clearInterval(countdown);
+    timerEl.style.display='none';
     mainTitle.style.display='none';
     subtitle.style.display='none';
     panel.style.display='none';
@@ -191,5 +209,7 @@ function submitCode(){
 
 </body>
 </html>
+
+
 
 
